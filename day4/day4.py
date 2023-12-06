@@ -28,11 +28,12 @@ def determine_win(game, cards, num):
         return
     else:
         # Win one card for the next MATCH cards
-        for i in range(num + 1, num + match + 1):
-            if i > len(cards) - 1:
-                break
-            else:
-                cards[i] += 1
+        # for i in range(num + 1, num + match + 1):
+        #     if i > len(cards) - 1:
+        #         break
+        #     else:
+        #         cards[i] += 1
+        cards[num + 1: num + match + 1] += cards[num]
         
 def main():
     parser = argparse.ArgumentParser()
@@ -69,12 +70,14 @@ def main():
     #     determine_win(game, cards, i, cards[i])
 
     for i, game in enumerate(games):
-        while cards[i] > 0:
-            determine_win(game, cards, i)
-            cards[i] -= 1
-            total += 1
+        # while cards[i] > 0:
+        #     determine_win(game, cards, i)
+        #     cards[i] -= 1
+        #     total += 1
+        determine_win(game, cards, i)
+        total += cards[i]
 
-    print("Part 2: ", total)
+    print("Part 2: ", int(total))
     
 if __name__ == '__main__':
     main()
