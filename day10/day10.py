@@ -35,7 +35,7 @@ MAP = {
         'right': ['-', 'J', '7', 'S']
     }
 }
-
+VERTICES = []
 def search_adjacent(maze, element, r, c, dir=None):
     match element:
         case '|':
@@ -161,6 +161,14 @@ def search_adjacent(maze, element, r, c, dir=None):
     # Return coordinate of next pipe
     return new_r, new_c, new_dir
 
+def shoelace(vertices):
+    area = 0
+    for i, row in enumerate(vertices):
+        next = vertices[(i + 1) % len(vertices)]
+        area += row[0]*next[1]
+        area -= next[0]*row[1]
+    return abs(area) / 2
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--input", help="input file")
@@ -177,16 +185,23 @@ def main():
         S = row.find(ANIMAL)
         if S != -1:
             r, c = i, S
+            VERTICES.append((r, c))
 
     # Determine length of pipe
     len_pipe = 1
     cur_r, cur_c, dir = search_adjacent(MAZE, ANIMAL, r, c)
 
     while cur_r != r or cur_c != c:
+        VERTICES.append((cur_r, cur_c))
         element = MAZE[cur_r][cur_c]
         len_pipe += 1
         cur_r, cur_c, dir = search_adjacent(MAZE, element, cur_r, cur_c, dir)
         
-    print(int(len_pipe / 2))
+    print('Part 1: ', int(len_pipe / 2))
+    AREA = shoelace(VERTICES)
+    BOUNDARY = len_pipe
+    INTERIOR = AREA - BOUNDARY / 2 + 1
+
+    print('Part 2: ', int(INTERIOR))
 if __name__ == '__main__':
     main()
